@@ -1,0 +1,3 @@
+pytest>=8,<10
+ruff>=0.6                # the linter CI runs
+pytesseract>=0.3.10      # only for bench/benchmark.py (whole-photo Tesseract baseline)

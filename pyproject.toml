@@ -1,0 +1,58 @@
+[project]
+name = "ss-to-word"
+version = "1.0.0"
+description = "Turn a folder of photos or screenshots into one Word or plain text document"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "vinter-man", email = "vintermanss@gmail.com" }]
+keywords = ["ocr", "tesseract", "docx", "bulgarian", "russian", "ukrainian"]
+dynamic = ["dependencies", "optional-dependencies"]
+
+[project.urls]
+Homepage = "https://github.com/vinter-man/ss-to-word"
+Source = "https://github.com/vinter-man/ss-to-word"
+Issues = "https://github.com/vinter-man/ss-to-word/issues"
+
+[project.scripts]
+ss-to-word = "ss_to_word.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["ss_to_word", "ss_to_word.ocr"]
+
+[tool.setuptools.package-data]
+ss_to_word = ["models/*.onnx", "models/tessdata/*.traineddata"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = "requirements.txt" }
+optional-dependencies.dev = { file = "requirements-dev.txt" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+    # Tk objects collected on a worker thread complain at interpreter shutdown; harmless and
+    # outside our control, and the tests that could hit it destroy their windows explicitly.
+    "ignore::pytest.PytestUnraisableExceptionWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM", "RUF"]
+ignore = [
+    "E501",     # long lines are caught by the formatter, not worth failing a build over
+    "RUF001",   # Cyrillic look-alikes are the point of this program
+    "RUF002",
+    "RUF003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"bench/*" = ["E402"]        # sys.path has to be set before the package can be imported
+"tests/*" = ["E402"]

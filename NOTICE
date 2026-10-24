@@ -1,0 +1,31 @@
+ss-to-word
+Copyright (c) 2026 vinter-man
+
+This product bundles third-party models in ss_to_word/models/, each under its own licence.
+
+-------------------------------------------------------------------------------
+
+ss_to_word/models/tessdata/*.traineddata
+
+  Tesseract OCR language models.
+  Copyright (c) Google Inc. and the Tesseract contributors.
+  Licensed under the Apache License, Version 2.0.
+  https://github.com/tesseract-ocr/tessdata_fast
+
+-------------------------------------------------------------------------------
+
+ss_to_word/models/cyrillic_PP-OCRv5_rec_mobile.onnx
+
+  PP-OCR text recognition model, converted to ONNX.
+  Copyright (c) PaddlePaddle Authors; ONNX conversion by the RapidOCR project.
+  Licensed under the Apache License, Version 2.0.
+  https://github.com/PaddlePaddle/PaddleOCR
+  https://github.com/RapidAI/RapidOCR
+
+-------------------------------------------------------------------------------
+
+The text detection model is not stored here: it is installed with the `rapidocr`
+package and carries the same Apache License, Version 2.0.
+
+A copy of the Apache License, Version 2.0 is available at
+http://www.apache.org/licenses/LICENSE-2.0

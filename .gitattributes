@@ -1,0 +1,5 @@
+# cmd.exe needs CRLF: a .bat with Unix line endings dies inside a parenthesised block.
+*.bat text eol=crlf
+*.command text eol=lf
+*.py text eol=lf
+*.md text eol=lf

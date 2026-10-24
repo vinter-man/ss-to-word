@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        # The oldest and the newest interpreter the launchers will pick, on both platforms.
+        include:
+          - { os: macos-14, python: "3.11" }
+          - { os: macos-14, python: "3.13" }
+          - { os: windows-2022, python: "3.11" }
+          - { os: windows-2022, python: "3.13" }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install Tesseract (macOS)
+        if: runner.os == 'macOS'
+        run: brew install tesseract
+      - name: Install Tesseract (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install --no-progress tesseract
+          echo "C:\Program Files\Tesseract-OCR" >> $env:GITHUB_PATH
+
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      # The GUI tests skip themselves if Tk cannot open a window; everything else still runs.
+      - run: python -m pytest -p no:cacheprovider
+
+      - name: Accuracy on the sample photos
+        if: runner.os == 'macOS' && matrix.python == '3.13'
+        run: python bench/structure.py
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install ruff
+      - run: ruff check .

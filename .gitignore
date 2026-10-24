@@ -1,0 +1,17 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+bench/out/
+.DS_Store
+
+# Results the program writes next to itself while you try it out.
+/*.docx
+/*.txt
+!requirements.txt
+!requirements-dev.txt
+
+# distribution archives built for handing over
+/*.zip
