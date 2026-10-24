@@ -75,6 +75,11 @@ Two mistakes were made here and are worth remembering:
    be refused a turn. The test is therefore pairwise: a turn is refused only when *both*
    orientations look composition-ambiguous.
 
+   What the junk of an upside-down read decodes *to* is a property of the installed Tesseract
+   rather than of this program: the sample photo that produces digits on macOS produces
+   low-confidence Cyrillic on the Windows build, which CI found the first time the suite ran
+   there. The pairwise rule holds either way; only a test that asserted the digits had to give.
+
 What the guards cost and what they buy, over 19 photos × 3 rotations per degradation:
 
 | Degradation | Wrong turns | Left as they were | Text lost |

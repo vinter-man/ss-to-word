@@ -306,15 +306,23 @@ def test_upside_down_photo_whose_junk_reads_as_digits_is_still_turned(engine: En
 
     Judging "these glyphs carry no orientation" on that read alone made the program refuse to
     turn a perfectly good photo, so the test is applied to both orientations at once.
+
+    What the junk decodes to is a property of the installed Tesseract, not of this program: the
+    same photo that reads as digits on macOS reads as low-confidence Cyrillic on the Windows
+    build. So the shape this regression needs is a precondition to check rather than to assert.
+    That the photo is turned back at all is covered on every platform by
+    `test_every_sample_photo_is_turned_back_in_reading_order`.
     """
     photo = Path(__file__).resolve().parent.parent / "images" / "slide-03.jpg"
     if not photo.is_file():
         pytest.skip("sample photos not available")
     upright = strip_exif(Image.open(photo).convert("RGB"))
-    junk = engine.read(upright.transpose(ROTATE[180]))
-    assert carries_no_orientation(junk), "precondition: the flipped read looks like digits"
+    flipped = upright.transpose(ROTATE[180])
+    if not carries_no_orientation(engine.read(flipped)):
+        pytest.skip("this Tesseract reads the flipped page as letters, not as symmetric glyphs; "
+                    "the single-read veto this test guards against cannot fire here")
 
-    read = engine.read_page(upright.transpose(ROTATE[180]))
+    read = engine.read_page(flipped)
     assert read.rotation == 180
     assert texts_of(engine, read) == texts_of(engine, engine.read_page(upright))
 
